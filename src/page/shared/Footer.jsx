@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-
+import footerImg from '../../assets/image/scholar.jpg'
 const Footer = () => {
     return (
         <footer className='bg-gray-900 text-gray-300 py-10 mt-16'>
@@ -9,7 +9,10 @@ const Footer = () => {
         <div className='flex flex-col md:flex-row justify-between items-center md:items-start gap-10'>
           
           <div className='text-center md:text-left'>
-            <h2 className='text-3xl font-bold text-white'>🎓 ScholarStream</h2>
+           <div className='flex justify-center items-center'>
+            <img className='w-12 h-12 rounded-full' src={footerImg} alt="" />
+            <h2 className='text-3xl font-bold text-white'> Scholar<span className='text-blue-600'>Stream</span></h2>
+           </div>
             <p className='mt-2 text-gray-400'>
               Empowering students with scholarships and opportunities.
             </p>
