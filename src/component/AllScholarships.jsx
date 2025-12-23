@@ -152,7 +152,7 @@ const AllScholarships = () => {
                 <p><span className='font-semibold'>Application Fee:</span> {item.applicationFees}</p>
               </div>
 
-              <Link >
+              <Link to={`/scholarship/${item.id}`}>
                 <button className='btn btn-success w-full mt-4'>
                   View Details
                 </button>
