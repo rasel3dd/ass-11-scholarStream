@@ -3,14 +3,18 @@ import Bannar from '../../component/Bannar';
 import SuccessStories from '../../component/SuccessStories';
 import FAQSection from '../../component/FAQSection';
 import ContactUs from '../../component/ContactUs';
+import AllScholarships from '../../component/AllScholarships';
 
 const Home = () => {
     return (
         <div>
             <Bannar></Bannar>
-            <SuccessStories></SuccessStories>
+            <AllScholarships></AllScholarships>
+            
             <FAQSection></FAQSection>
             <ContactUs></ContactUs>
+            <SuccessStories></SuccessStories>
+            
         </div>
     );
 };
