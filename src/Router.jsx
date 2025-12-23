@@ -5,6 +5,7 @@ import Home from "./page/home/Home";
 
 
 
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -12,8 +13,9 @@ export const router = createBrowserRouter([
     children: [
         {
             index: true,
-            Component: Home
-        }
+            Component: Home,
+        },
+        
     ]
   },
 ]);
