@@ -1,9 +1,10 @@
-import React from 'react'
-import { useNavigate, useParams } from 'react-router'
+import React, { useState } from 'react';
+
+import { Link } from 'react-router'
 
 
 const scholarshipsData = [
-   {
+    {
     id: 1,
     scholarshipName: 'Merit Excellence Scholarship',
     universityName: 'Harvard University',
@@ -69,7 +70,7 @@ const scholarshipsData = [
     location: 'Germany',
     applicationFees: '$40'
   },
-  {
+   {
     id: 7,
     scholarshipName: 'NextGen Research Fellowship',
     universityName: 'University of Tokyo',
@@ -125,69 +126,97 @@ const scholarshipsData = [
     applicationFees: '$25'
   }
 ]
+const Scholarship = () => {
+     const [search, setSearch] = useState('')
+      const [category, setCategory] = useState('')
+      const [subject, setSubject] = useState('')
+      const [location, setLocation] = useState('')
+    
+      const filteredScholarships = scholarshipsData.filter(item =>
+        (item.scholarshipName.toLowerCase().includes(search.toLowerCase()) ||
+          item.universityName.toLowerCase().includes(search.toLowerCase()) ||
+          item.degree.toLowerCase().includes(search.toLowerCase())) &&
+        (category === '' || item.scholarshipCategory === category) &&
+        (subject === '' || item.subjectCategory === subject) &&
+        (location === '' || item.location === location)
+      )
+    return (
+        <div className='w-11/12 mx-auto py-10'>
+      <h1 className='text-3xl font-bold text-center mb-8 text-green-600'>
+        Available Scholarships
+      </h1>
 
-const ScholarshipDetails = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-
-  const scholarship = scholarshipsData.find(
-    item => item.id === parseInt(id)
-  )
-
-  if (!scholarship) {
-    return <p className='text-center mt-20 text-red-500'>Scholarship not found</p>
-  }
-
-  return (
-    <div className='w-11/12 mx-auto py-10'>
-      {/* Top Section */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-        <img
-          src={scholarship.universityImage}
-          alt={scholarship.universityName}
-          className='rounded-2xl shadow-lg'
+      
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
+        <input
+          type='text'
+          placeholder='Search by Name, University or Degree'
+          className='input input-bordered w-full'
+          onChange={e => setSearch(e.target.value)}
         />
 
-        <div className='space-y-3'>
-          <h1 className='text-3xl font-bold text-green-600'>
-            {scholarship.scholarshipName}
-          </h1>
+        <select
+          className='select select-bordered'
+          onChange={e => setCategory(e.target.value)}
+        >
+          <option value=''>Scholarship Category</option>
+          <option value='Merit'>Merit</option>
+          <option value='Need Based'>Need Based</option>
+        </select>
 
-          <h2 className='text-xl font-semibold'>
-            {scholarship.universityName}
-          </h2>
+        <select
+          className='select select-bordered'
+          onChange={e => setSubject(e.target.value)}
+        >
+          <option value=''>Subject Category</option>
+          <option value='Computer Science'>Computer Science</option>
+          <option value='Business'>Business</option>
+        </select>
 
-          <p><strong>World Rank:</strong> #{scholarship.worldRank}</p>
-          <p><strong>Deadline:</strong> {scholarship.deadline}</p>
-          <p><strong>Location:</strong> {scholarship.location}</p>
-          <p><strong>Application Fee:</strong> {scholarship.applicationFees}</p>
+        <select
+          className='select select-bordered'
+          onChange={e => setLocation(e.target.value)}
+        >
+          <option value=''>Location</option>
+          <option value='USA'>USA</option>
+          <option value='Canada'>Canada</option>
+        </select>
+      </div>
 
-          <button
-            onClick={() => navigate('/checkout')}
-            className='btn btn-success mt-4'
+      
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {filteredScholarships.map(item => (
+          <div
+            key={item.id}
+            className='bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition'
           >
-            Apply for Scholarship
-          </button>
-        </div>
-      </div>
+            <img
+              src={item.universityImage}
+              alt={item.universityName}
+              className='h-48 w-full object-cover'
+            />
 
-      {/* Description */}
-      <div className='mt-10 bg-white p-6 rounded-2xl shadow'>
-        <h3 className='text-2xl font-bold mb-3'>
-          Scholarship Description
-        </h3>
-        <p className='text-gray-600'>{scholarship.description}</p>
-      </div>
+            <div className='p-5 space-y-2'>
+              <h2 className='text-xl font-bold'>{item.universityName}</h2>
+              <p className='text-sm text-gray-500'>{item.scholarshipName}</p>
 
-      {/* Stipend */}
-      <div className='mt-6 bg-white p-6 rounded-2xl shadow'>
-        <h3 className='text-2xl font-bold mb-3'>
-          Stipend & Coverage
-        </h3>
-        <p className='text-gray-600'>{scholarship.stipend}</p>
+              <div className='text-sm'>
+                <p><span className='font-semibold'>Category:</span> {item.scholarshipCategory}</p>
+                <p><span className='font-semibold'>Location:</span> {item.location}</p>
+                <p><span className='font-semibold'>Application Fee:</span> {item.applicationFees}</p>
+              </div>
+
+              <Link to={`/scholarshipDetail/${item.id}`}>
+                <button className='btn btn-success w-full mt-4'>
+                  View Details
+                </button>
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  )
-}
+    );
+};
 
-export default ScholarshipDetails
+export default Scholarship;

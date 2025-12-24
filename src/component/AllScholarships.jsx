@@ -92,7 +92,7 @@ const AllScholarships = () => {
         Available Scholarships
       </h1>
 
-      {/* Search & Filter Section */}
+      
       <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
         <input
           type='text'
@@ -129,7 +129,7 @@ const AllScholarships = () => {
         </select>
       </div>
 
-      {/* Scholarship Grid */}
+      
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
         {filteredScholarships.map(item => (
           <div
@@ -152,7 +152,7 @@ const AllScholarships = () => {
                 <p><span className='font-semibold'>Application Fee:</span> {item.applicationFees}</p>
               </div>
 
-              <Link to={`/scholarship/${item.id}`}>
+              <Link to={`/scholarshipDetail/${item.id}`}>
                 <button className='btn btn-success w-full mt-4'>
                   View Details
                 </button>
