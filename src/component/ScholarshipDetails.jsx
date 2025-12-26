@@ -140,7 +140,7 @@ const ScholarshipDetails = () => {
 
   return (
     <div className='w-11/12 mx-auto py-10'>
-      {/* Top Section */}
+     
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
         <img
           src={scholarship.universityImage}
@@ -163,15 +163,16 @@ const ScholarshipDetails = () => {
           <p><strong>Application Fee:</strong> {scholarship.applicationFees}</p>
 
           <button
-            onClick={() => navigate('/checkout')}
-            className='btn btn-success mt-4'
+              onClick={() =>
+    navigate('/checkout', { state: { scholarship } })
+  }
+  className='btn btn-success mt-4 w-full'
           >
             Apply for Scholarship
           </button>
         </div>
       </div>
 
-      {/* Description */}
       <div className='mt-10 bg-white p-6 rounded-2xl shadow'>
         <h3 className='text-2xl font-bold mb-3'>
           Scholarship Description
@@ -179,7 +180,6 @@ const ScholarshipDetails = () => {
         <p className='text-gray-600'>{scholarship.description}</p>
       </div>
 
-      {/* Stipend */}
       <div className='mt-6 bg-white p-6 rounded-2xl shadow'>
         <h3 className='text-2xl font-bold mb-3'>
           Stipend & Coverage

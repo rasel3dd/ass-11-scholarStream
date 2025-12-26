@@ -5,6 +5,9 @@ import ScholarshipDetails from "./component/ScholarshipDetails";
 import Register from "./component/Register";
 import Login from "./component/Login";
 import Scholarship from "./component/Scholarship";
+import Checkout from "./component/Checkout";
+import Dashboard from "./component/Dashboard";
+import MyProfile from "./component/MyProfile";
 
 
 
@@ -35,6 +38,18 @@ export const router = createBrowserRouter([
           path: "/Scholarship",
           element: <Scholarship></Scholarship>,
 
+        },
+        {
+          path: "/checkout",
+          element: <Checkout></Checkout>,
+        },
+        {
+          path: "/dashboard",
+          element: <Dashboard></Dashboard>,
+        },
+        {
+          path: "/myProfile",
+          element: <MyProfile></MyProfile>
         }
 
     ]
