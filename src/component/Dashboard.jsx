@@ -3,7 +3,7 @@ import { NavLink, Outlet, Link } from 'react-router';
 import { AuthContext } from '../auth/AuthProvider';
 import { 
   FaHome, FaUserGraduate, FaUserCog, FaFolderOpen, 
-  FaSignOutAlt, FaBars, FaTimes 
+  FaSignOutAlt, FaBars, FaTimes, FaChartBar 
 } from 'react-icons/fa';
 
 const Dashboard = () => {
@@ -39,7 +39,10 @@ const Dashboard = () => {
                         {isAdmin && (
                             <>
                                 <div className='pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider'>Admin Menu</div>
-                                <NavLink to='/dashboard/manage-users' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
+                                <NavLink to='/dashboard/analytics' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
+                                    <FaChartBar /> Analytics
+                                </NavLink>
+                                <NavLink to='/dashboard/manegeUser' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
                                     <FaUserCog /> Manage Users
                                 </NavLink>
                                 <NavLink to='/dashboard/add-scholarship' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
@@ -53,6 +56,9 @@ const Dashboard = () => {
                                 <div className='pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider'>Student Menu</div>
                                 <NavLink to='/dashboard/my-applications' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
                                     <FaUserGraduate /> My Applications
+                                </NavLink>
+                                <NavLink to='/dashboard/profile' className={({isActive}) => `flex items-center gap-3 p-3 rounded-lg transition ${isActive ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-green-50'}`}>
+                                    <FaUserGraduate /> My Profile
                                 </NavLink>
                             </>
                         )}
