@@ -1,52 +1,87 @@
 import React, { createContext, useEffect, useState } from 'react';
 import app from '../firebase/firebase.config';
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import { 
+    createUserWithEmailAndPassword, 
+    getAuth, 
+    GoogleAuthProvider, 
+    onAuthStateChanged, 
+    sendPasswordResetEmail, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    signOut, 
+    updateProfile 
+} from "firebase/auth";
+import axios from 'axios';
+
 export const AuthContext = createContext();
 const auth = getAuth(app);
 const googleLogin = new GoogleAuthProvider();
-const AuthProvider = ({children}) => {
+
+const axiosPublic = axios.create({
+    baseURL: 'http://localhost:5000'
+});
+
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const createUser = (email, password) =>{
+    const createUser = (email, password) => {
         setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password);
     };
-    const signInGoogle = () =>{
 
+    const signInGoogle = () => {
         setLoading(true);
         return signInWithPopup(auth, googleLogin);
     };
-    
-    const signIn =(email, password) =>{
+
+    const signIn = (email, password) => {
         setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
     };
-    const updateUser =(updateData) =>{
-        return updateProfile(auth.currentUser, updateData);
 
+    const updateUser = (updateData) => {
+        return updateProfile(auth.currentUser, updateData);
     };
-    const logOut = () =>{
+
+    const logOut = () => {
+        setLoading(true);
+        localStorage.removeItem('access-token');
         return signOut(auth);
     };
-    const resetPassword = (email) =>{
+
+    const resetPassword = (email) => {
         setLoading(true);
         return sendPasswordResetEmail(auth, email);
-
     };
-    useEffect(() =>{
-      const unsubcribe = onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-        setLoading(false);
 
-       });
-       return ( ) =>{
-        unsubcribe();
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser);
+            
+            if (currentUser) {
+                const userInfo = { email: currentUser.email };
+                try {
+                    const res = await axiosPublic.post('/jwt', userInfo);
 
-       }
+                    if (res.data.token) {
+                        localStorage.setItem('access-token', res.data.token);
+                    }
+                } catch (error) {
+                    console.error("JWT error:", error);
+                    localStorage.removeItem('access-token');
+                }
+            } else {
+                localStorage.removeItem('access-token');
+            }
+            
+            setLoading(false);
+        });
 
+        return () => unsubscribe();
     }, []);
-    const authData ={
+
+    const authData = {
         user,
         setUser,
         createUser,
@@ -58,7 +93,12 @@ const AuthProvider = ({children}) => {
         signInGoogle,
         resetPassword,
     };
-    return <AuthContext.Provider value={authData}> {children} </AuthContext.Provider>
+
+    return (
+        <AuthContext.Provider value={authData}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthProvider;

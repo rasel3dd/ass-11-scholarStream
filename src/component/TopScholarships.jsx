@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router';
 import { FaArrowRight, FaCalendarAlt, FaDollarSign, FaGraduationCap } from 'react-icons/fa';
-import AxiosSecure from '../hooks/AxiosSecure';
+import AxiosSecure from '../hooks/useAxiosSecure';
 
 
 const TopScholarships = () => {

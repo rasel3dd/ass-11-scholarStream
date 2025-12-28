@@ -5,7 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router';
-import AxiosSecure from '../hooks/AxiosSecure';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 
 const Register = () => {
@@ -14,7 +14,9 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState('');
   const { createUser, updateUser, signInGoogle, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const axiosPublic = AxiosSecure();
+  
+  
+  const axiosPublic = useAxiosSecure(); 
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -24,13 +26,11 @@ const Register = () => {
     const email = form.email.value.trim();
     const password = form.password.value;
 
-   
     if (name.length < 5) {
       setNameError('Full name must be at least 5 characters.');
       return;
     } else setNameError('');
 
-  
     const passwordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+={}[\]|:;"'<>,.?/~`]).{6,}$/;
     if (!passwordValid.test(password)) {
       setPasswordError(
@@ -39,24 +39,24 @@ const Register = () => {
       return;
     } else setPasswordError('');
 
-
     createUser(email, password)
       .then((result) => {
         const loggedUser = result.user;
         updateUser({ displayName: name, photoURL: photo })
           .then(async () => {
             
+            // ডাটাবেসে পাঠানোর অবজেক্ট
             const userInfo = {
               name,
               email,
               photo,
-              role: 'student', 
+              role: 'Student', // বড় হাতের 'S' দিন যাতে ড্যাশবোর্ড লজিকের সাথে মিলে যায়
               createdAt: new Date()
             };
 
             try {
               const res = await axiosPublic.post('/users', userInfo);
-              if (res.data.insertedId || res.data.message === 'user already exists') {
+              if (res.data.insertedId || res.data.message === 'User already exists') {
                 setUser({ ...loggedUser, displayName: name, photoURL: photo });
                 toast.success('Registration successful!');
                 setTimeout(() => navigate('/'), 1500);
@@ -76,20 +76,23 @@ const Register = () => {
       .then(async (result) => {
         const user = result.user;
         
-       
         const userInfo = {
           name: user.displayName,
           email: user.email,
           photo: user.photoURL,
-          role: 'student', 
+          role: 'Student', // এখানেও 'Student' (বড় হাতের S)
           createdAt: new Date()
         };
         
-        await axiosPublic.post('/users', userInfo);
-        
-        setUser(user);
-        toast.success('Google registration successful!');
-        setTimeout(() => navigate('/'), 1500);
+        try {
+          // গুগল লগইনের সময়ও ডাটাবেসে ইউজার সেভ করা নিশ্চিত করুন
+          await axiosPublic.post('/users', userInfo);
+          setUser(user);
+          toast.success('Google registration successful!');
+          setTimeout(() => navigate('/'), 1500);
+        } catch (error) {
+          console.error("Google user save error", error);
+        }
       })
       .catch((err) => toast.error(err.message));
   };
@@ -102,12 +105,10 @@ const Register = () => {
         </h1>
 
         <form onSubmit={handleRegister} className='space-y-4'>
-          
           <div className='flex flex-col'>
             <label className='mb-1 font-medium text-gray-700'>Full Name</label>
             <input
-              type='text'
-              name='name'
+              type='text' name='name'
               placeholder='Enter your full name'
               className='w-full rounded-xl px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400'
               required
@@ -115,24 +116,20 @@ const Register = () => {
             {nameError && <p className='text-red-500 text-xs mt-1'>{nameError}</p>}
           </div>
 
-         
           <div className='flex flex-col'>
             <label className='mb-1 font-medium text-gray-700'>Photo URL</label>
             <input
-              type='text'
-              name='photo'
+              type='text' name='photo'
               placeholder='Enter your photo URL'
               className='w-full rounded-xl px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400'
               required
             />
           </div>
 
-          
           <div className='flex flex-col'>
             <label className='mb-1 font-medium text-gray-700'>Email Address</label>
             <input
-              type='email'
-              name='email'
+              type='email' name='email'
               placeholder='Enter your email'
               className='w-full rounded-xl px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400'
               required
@@ -166,7 +163,7 @@ const Register = () => {
             Create Account
           </button>
 
-          <div className='divider text-xs text-gray-400'>OR</div>
+          <div className='divider text-xs text-gray-400 text-center my-2'>OR</div>
 
           <button
             type='button'
